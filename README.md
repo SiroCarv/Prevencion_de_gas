@@ -1,16 +1,65 @@
-# React + Vite
+Dashboard: Sistema de Prevención y Monitoreo de Gas IoT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz de usuario (Frontend) diseñada para monitorear en tiempo real un sistema IoT de detección de gas. La aplicación se conecta localmente a un microcontrolador (ESP8266/ESP32) con un sensor de gas (ej. MQ-2) para visualizar los niveles del ambiente y alertar sobre posibles fugas.
 
-Currently, two official plugins are available:
+¿Cómo funciona?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Ingreso de IP: El usuario introduce la dirección IP local asignada al microcontrolador.
 
-## React Compiler
+Polling de Datos: La aplicación de React realiza peticiones HTTP (GET /data) cada 500 milisegundos para obtener lecturas actualizadas.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Análisis de Estado:
 
-## Expanding the ESLint configuration
+Normal: Se muestra una interfaz verde que indica seguridad.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Peligro: Si el sensor detecta niveles altos, la interfaz cambia a un rojo intermitente y simula la respuesta del sistema (cierre de válvula de gas a 180° y encendido de ventilación).
+
+Características
+
+Conexión Directa: No requiere de un servidor backend intermedio o servicios en la nube; se conecta directo a la IP del nodo.
+
+Actualización Instantánea: Refresco de datos cada medio segundo para una capacidad de respuesta óptima ante emergencias.
+
+Diseño Reactivo y Responsivo: Construido con Tailwind CSS para adaptarse a diferentes pantallas y cambiar radicalmente su diseño visual bajo estados de alerta.
+
+Tolerancia a fallos: Muestra mensajes de error claros si el sensor se desconecta o la red falla.
+
+Instalación Local
+
+Para ejecutar este proyecto en tu entorno local de desarrollo:
+
+Clonar el repositorio:
+
+git clone <https://github.com/SiroCarv/Prevencion_de_gas.git>
+cd prevencion_de_gas
+
+
+Instalar los paquetes de Node:
+
+npm install
+
+
+Ejecutar el entorno de desarrollo:
+
+npm run dev
+
+
+Acceso: Abre http://localhost:5173 en tu navegador.
+
+Integración con el Hardware (NodeMCU / ESP)
+
+Para que este dashboard funcione correctamente, tu microcontrolador debe estar configurado como un servidor web en la red local y tener un endpoint en la ruta /data que responda a peticiones GET con un objeto JSON exacto a este:
+
+{
+  "gas": 450, 
+  "alerta": false 
+}
+
+
+Nota: El valor de gas corresponde a la lectura analógica del sensor (0-1023) y alerta es un booleano que determina si se ha superado el umbral de peligro.
+
+Tecnologías Principales
+
+Frontend: React, Vite.
+
+Estilos: Tailwind CSS, Lucide React (Iconos).
